@@ -5,6 +5,7 @@
 int clear(void)
 {
 	write(1, "\E[2J\E[0;0H",strlen("\E[2J\E[0;0H"));
+	
 	return 0;	
 }
 
@@ -23,7 +24,7 @@ int term_xy(int x, int y)
 			return -1;
 	}
 	
-		return 0;
+	return 0;
 }
 
 int get_screen_size(int *rows, int *cols)
@@ -47,6 +48,7 @@ int fg_color(enum colors color)
 		return -1;
 	else
 		write(1, str, strlen(str));
+	
 	return 0;
 }
 
