@@ -7,8 +7,7 @@ int main()
 {
 	regInit();
 	int val;
-	regSet(FLAG_INTERRUPT, 1);
-	regGet(FLAG_INTERRUPT, &val);
-	printf("%d", val);
+	regSet(FLAG_OVERFLOW, 1);
+	printf("%d", reg);
 	return 0;
 }

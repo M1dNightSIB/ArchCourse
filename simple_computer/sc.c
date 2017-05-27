@@ -94,19 +94,19 @@ int memLoad(char *filename)
 
 int regInit()
 {
-	reg = 0x0;
+	reg = 0;
 	
 	return 0;
 }
 
 int regSet(int reg, int value)
 {
-	if(reg >= 0 && reg <= 5)
+	if((reg >= 0) && (reg <= 5))
 	{
 		if(value == 1)
-			BIT_ON(reg, reg);
+			reg = reg | (1 << (reg - 1));
 		else if(value == 0)
-			BIT_OFF(reg, reg);
+			reg = reg & (~(1 << (reg - 1)));
 		else
 			return -1;
 	}
@@ -118,9 +118,9 @@ int regSet(int reg, int value)
 
 int regGet(int reg, int *value)
 {
-	if(reg >= 0 && reg <= 5)
+	if((reg >= 0) && (reg <= 5))
 	{
-		*value = BITCHECK(reg, reg);
+		*value = (reg >> (reg - 1)) & 0x1;
 	}
 	else
 		return -1;
