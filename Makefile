@@ -1,10 +1,10 @@
 COMPILER = gcc
 CFLAGS = -Wall -c
-LFLAGS = -L. -lSC -g -o
+LFLAGS = -L. -lSC -lTERM -g -o
 
 all: main
 
-main: main.o libSC.a
+main: main.o libSC.a libTERM.a
 	$(COMPILER) main.o $(LFLAGS) main
 	
 main.o: main.c
@@ -17,5 +17,12 @@ libSC.a: sc.o
 sc.o: simple_computer/sc.c
 	$(COMPILER) $(CFLAGS) simple_computer/sc.c
 	
+libTERM.a: mt.o
+	ar rc libTERM.a mt.o
+	ranlib libTERM.a
+	
+mt.o: my_term/mt.c
+	$(COMPILER) $(CFLAGS) my_term/mt.c
+	
 clean:
-	rm main *.o libSC.a
+	rm main *.o *.a
