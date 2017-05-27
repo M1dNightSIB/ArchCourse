@@ -7,6 +7,7 @@ int clear(void)
 	write(1, "\E[2J\E[0;0H",strlen("\E[2J\E[0;0H"));
 	return 0;	
 }
+
 int term_xy(int x, int y)
 {
 	char str[20];
@@ -24,6 +25,7 @@ int term_xy(int x, int y)
 	
 		return 0;
 }
+
 int get_screen_size(int *rows, int *cols)
 {
 	struct winsize size;
@@ -37,6 +39,7 @@ int get_screen_size(int *rows, int *cols)
 	else
 		return -1;
 }
+
 int fg_color(enum colors color)
 {
 	char str[20];
@@ -46,6 +49,7 @@ int fg_color(enum colors color)
 		write(1, str, strlen(str));
 	return 0;
 }
+
 int bg_color(enum colors color)
 {
 	char str[20];
