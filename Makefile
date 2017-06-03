@@ -1,28 +1,47 @@
-COMPILER = gcc
+CMP = gcc
 CFLAGS = -Wall -c
-LFLAGS = -L. -lSC -lTERM -g -o
-
+LFLAGS =  -Llib -lSC -lMTBC -g -o
+BDIR = "build/SimpleComputer"
 all: main
 
-main: main.o libSC.a libTERM.a
-	$(COMPILER) main.o $(LFLAGS) main
-	
-main.o: main.c
-	$(COMPILER) $(CFLAGS) main.c
-	
-libSC.a: sc.o
-	ar rc libSC.a sc.o
-	ranlib libSC.a
+run:
+	@./bin/SimpleComputer
 
-sc.o: simple_computer/sc.c
-	$(COMPILER) $(CFLAGS) simple_computer/sc.c
-	
-libTERM.a: mt.o
-	ar rc libTERM.a mt.o
-	ranlib libTERM.a
-	
-mt.o: my_term/mt.c
-	$(COMPILER) $(CFLAGS) my_term/mt.c
-	
+main: build/main.o lib/libSC.a lib/libMTBC.a
+	@mkdir -p bin
+	@echo "\033[32mBuild main: \033[0m"
+	$(CMP) build/main.o $(LFLAGS) bin/SimpleComputer
+
+
+build/main.o: main.c
+	@mkdir -p build
+	@$(CMP) $(CFLAGS) main.c $(LFLAGS) $@
+
+lib/libSC.a: build/sc.o
+	@echo "\033[32mBuild Simple Computer static lib: \033[0m"
+	@mkdir -p lib
+	ar rc lib/libSC.a build/sc.o
+	ranlib lib/libSC.a
+
+lib/libMTBC.a: build/mt.o build/bc.o
+	@echo "\033[32mBuild My Term & Big Char static lib: \033[0m"
+	@mkdir -p lib
+	ar rc lib/libMTBC.a build/mt.o build/bc.o
+	ranlib lib/libMTBC.a
+
+build/sc.o: simple_computer/sc.c
+	@mkdir -p build
+	@$(CMP) $(CFLAGS) simple_computer/sc.c $(LFLAGS) $@
+
+build/mt.o: my_term/mt.c
+	@mkdir -p build
+	@$(CMP) $(CFLAGS) my_term/mt.c $(LFLAGS) $@
+
+build/bc.o: big_chars/bc.c
+	@mkdir -p build
+	@$(CMP) $(CFLAGS) big_chars/bc.c $(LFLAGS) $@
+
+
+
 clean:
-	rm main *.o *.a
+	rm -rf build bin lib

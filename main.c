@@ -4,6 +4,6 @@
 
 int main()
 {
-  term_xy(5, 30);
+
   return 0;
 }
