@@ -1,7 +1,5 @@
 #include <stdio.h>
-#include "simple_computer/sc.h"
 #include "main.h"
-#include "main_frame/mf.h"
 
 int main()
 {
@@ -9,18 +7,104 @@ int main()
 	init_frame();
 	memInit();
 	regInit();
-	while(1)
+	set_non_canonical_regime(0x1, 0x0);
+	enum keys key = other_key;
+
+	while(hand_exit)
 	{
-		print_ram(0);
+		print_ram(&cur_cell);
 		print_acc();
 		print_inst_cnt();
 		print_operation();
-	}	
+		key_handler(key);
+	}
+
+	clear();	//clearing 
 	cursor(SHOW_CURSOR);
+	set_non_canonical_regime(0x0, 0x1);
+
 	return 0;
 }
 
-void print_ram(int cell)
+void init_sig_handlers()
+{
+	
+}
+
+int set_non_canonical_regime(int vmin, int echo)
+{
+	if(set_term_regime(0, 0, vmin, echo, 1))
+		return 0;
+	else
+		return -1;
+}
+
+void key_handler(enum keys key)
+{
+	char buf[4];
+	read_key(&key);
+
+	switch(key)
+	{
+		case up_key:
+			cur_cell -= 0xA;
+			break;
+		
+		
+		case down_key:
+			cur_cell += 0xA;
+			break;
+
+		
+		case left_key:
+			cur_cell -= 0x1;
+			break;
+
+		
+		case right_key:
+			cur_cell += 0x1;
+			break;
+		
+		case q_key:
+			hand_exit = 0x0;
+			break;
+
+		case f5_key:
+			set_non_canonical_regime(0x4, 0x0);
+			read(FD, buf, sizeof(buf));
+			acc = atoi(buf);
+			set_non_canonical_regime(0x1, 0x0);
+			break;
+
+		case f6_key:
+			inst_cnt = cur_cell;
+			break;
+
+		case enter_key:
+			set_non_canonical_regime(0x4, 0x0);
+			read(FD, buf, sizeof(buf));
+			RAM[cur_cell] = atoi(buf);
+			break;
+		
+		default: 
+			key = other_key;
+			break;
+	}
+
+	if(cur_cell > 0x63)// 0x63 = 99
+		cur_cell = 0x0;
+	if(cur_cell < 0x0)
+		cur_cell = 0x63;
+
+	operation = RAM[cur_cell];
+}
+
+void print_cur_cell()
+{
+
+}
+
+void print_ram(int *cell)
 {
 	for(int i = 0; i < memory_size / 10; i++)
 	{
@@ -31,12 +115,11 @@ void print_ram(int cell)
 			char buf[6];
 			sprintf(buf, "+%04d ", RAM[i * 10 + j]);
 			
-			if(cell == i * 10 + j)
+			if(*cell == i * 10 + j)
 				bg_color(GREEN);
-			else
-				bg_color(DEFAULT);
 			
 			write(FD, buf, strlen(buf));
+			bg_color(DEFAULT);
 		}
 	}
 }
