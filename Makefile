@@ -4,13 +4,10 @@ LFLAGS =  -Llib -lSC -lMTBC -g -o
 BDIR = "build/SimpleComputer"
 all: main
 
-run:
-	@./bin/SimpleComputer
-
-main: build/main.o lib/libSC.a lib/libMTBC.a
+main: build/main.o build/mf.o lib/libSC.a lib/libMTBC.a
 	@mkdir -p bin
 	@echo "\033[32mBuild main: \033[0m"
-	$(CMP) build/main.o $(LFLAGS) bin/SimpleComputer
+	$(CMP) build/main.o build/mf.o $(LFLAGS) bin/SimpleComputer
 	@echo "\033[35m*************************************"
 	@echo "Input /"make run"/ for start program"
 	@echo "*************************************\033[0m"
@@ -19,6 +16,10 @@ main: build/main.o lib/libSC.a lib/libMTBC.a
 build/main.o: main.c
 	@mkdir -p build
 	@$(CMP) $(CFLAGS) main.c $(LFLAGS) $@
+
+build/mf.o: main_frame/mf.c
+	@mkdir -p build
+	@$(CMP) $(CFLAGS) main_frame/mf.c $(LFLAGS) $@
 
 lib/libSC.a: build/sc.o
 	@echo "\033[32mBuild Simple Computer static lib: \033[0m"
@@ -44,7 +45,11 @@ build/bc.o: big_chars/bc.c
 	@mkdir -p build
 	@$(CMP) $(CFLAGS) big_chars/bc.c $(LFLAGS) $@
 
+re: clean main
 
+	
+run:
+	@./bin/SimpleComputer
 
 clean:
 	rm -rf build bin lib

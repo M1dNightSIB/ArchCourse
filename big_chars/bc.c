@@ -85,3 +85,80 @@ int printchar(int *big, int x, int y, enum colors fg, enum colors bg)
 		
 	return 0;
 }
+
+int setcharpos(int *big, int x, int y, int value)
+{
+	int pos = 0;
+
+	if((x < 0) || (y < 0) || (x > 7) || (y > 7) || (value > 1) || (value < 0))
+		return -1;
+
+	if(y <= 3)
+		pos = 0;
+	else
+		pos = 1;
+
+	y = y % 4;
+
+	if(value == 0)
+		big[pos] &= ~(1 << (y * 8 + x));
+	else
+		big[pos] |= (1 << (y * 8 + x)); 
+
+	return 0;
+}
+
+int getcharpos(int *big, int x, int y, int *value)
+{
+	int pos = 0;
+
+	if((x < 0) || (y < 0) || (x > 7) || (y > 7))
+		return -1;
+
+	if(y <= 3)
+		pos = 0;
+	else
+		pos = 1;
+
+	y = y % 4;
+	*value = (big[pos] >> (y * 8)) & 1;
+
+	return 0;
+}
+
+int charwrite(int fd, int *big, int count)
+{
+	int err = 0;
+
+  	err = write(fd, &count, sizeof(count));
+  	
+  	if (err == -1)
+    	return -1;
+
+ 	err = write(fd, big, count * sizeof(int) * 2);
+  	
+  	if (err == -1) 
+    	return -1;
+
+ 	return 0;
+}
+
+int charread(int fd, int *big, int nd_count, int *count)
+{
+	int n, cnt, err;
+
+  	err = read(fd, &n, sizeof(n));
+  	
+  	if ((err == -1) || (err != sizeof(n)))
+	    return -1;
+
+
+  	cnt = read(fd, big, nd_count * sizeof(int) * 2);
+  
+  	if (cnt == -1)
+    	return -1;
+
+  	*count = cnt / (sizeof(int) * 2);
+
+  	return 0;
+}

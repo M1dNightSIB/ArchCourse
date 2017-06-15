@@ -8,6 +8,9 @@
 #define FLAG_INTERRUPT 4
 #define FLAG_COMMAND 5
 
+int *RAM,
+	reg;
+
 int memInit();
 int memSet(int address, int value);
 int memGet(int address, int *value);
