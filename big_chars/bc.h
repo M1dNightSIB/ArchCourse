@@ -17,6 +17,6 @@
 
 void printA(char str);
 int box(int x1, int y1, int x2, int y2);
-
+int printchar(int *big, int x, int y, enum colors fg, enum colors bg);
 
 #endif

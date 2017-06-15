@@ -46,3 +46,42 @@ int box(int x1, int y1, int x2, int y2)
 
 	return 0;
 }
+
+int printchar(int *big, int x, int y, enum colors fg, enum colors bg)
+{
+	int xmax, ymax, pos, bit;
+	char row[9];
+	
+	get_screen_size(&ymax, &xmax);
+	
+	if(x < 0 || y < 0 || x + 8 > xmax|| y + 8 > ymax)
+		return -1;
+	
+	row[8] = '\0';
+	
+	fg_color(fg);
+	bg_color(bg);
+	
+	for(int i = 0; i < 8; i++)
+	{
+		for(int j = 0;  j < 8; j++)
+		{
+			pos = i >> 2;
+			bit = (big[pos] >> ((i % 4) * 8 + j)) & 1;
+			
+			if(bit == 0)
+				row[j] = ' ';
+			else
+				row[j] = BOXCHAR_REC;
+			
+		}
+		term_xy(x, y + i);
+		
+		for(int i = 0; i < strlen(row); i++)
+			printA(row[i]);
+	}
+	fg_color(DEFAULT);
+	bg_color(DEFAULT);
+		
+	return 0;
+}

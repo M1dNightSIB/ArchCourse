@@ -11,6 +11,9 @@ main: build/main.o lib/libSC.a lib/libMTBC.a
 	@mkdir -p bin
 	@echo "\033[32mBuild main: \033[0m"
 	$(CMP) build/main.o $(LFLAGS) bin/SimpleComputer
+	@echo "\033[35m*************************************"
+	@echo "Input /"make run"/ for start program"
+	@echo "*************************************\033[0m"
 
 
 build/main.o: main.c
