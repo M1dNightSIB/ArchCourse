@@ -24,11 +24,13 @@ void print_ram(int *cell); //write cells of memory
 void print_acc();
 void print_inst_cnt();
 void print_operation();
+void print_flags();
 void print_cur_cell();
 void init_sig_handlers();
 void transform_bchar(char *sym, int *big);
 int set_non_canonical_regime(int vmin, int echo);
 
+char flags[5] = {'O', 'D', 'M', 'I', 'C'}; //Overflow, Zero Div, Out of memoory, Interrupt, Incorrected commnand
 char bigchar_0[64] = {
    0, 0, 1, 1, 1, 1, 0, 0,
    0, 1, 0, 0, 0, 0, 1, 0,

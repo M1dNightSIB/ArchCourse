@@ -17,6 +17,7 @@ int main()
 		print_inst_cnt();
 		print_operation();
 		print_cur_cell();
+		print_flags();
 		key_handler(key);
 	}
 
@@ -55,6 +56,7 @@ void cell_step(int sig)
 		print_inst_cnt();
 		print_operation();
 		print_cur_cell();
+		print_flags();
 		inst_cnt++;
 		
 		if(inst_cnt > 0x63)
@@ -203,6 +205,34 @@ void print_operation()
 	sprintf(buf, "+%02d : %02d", operation / 100, operation % 100);
 
 	write(FD, buf, strlen(buf));
+}
+
+void print_flags()
+{
+	int start_x = 64 + 1;
+	const int y = 11 + 1;
+
+	fg_color(RED);
+
+	for(int i = 0; i < 5; i++)
+	{
+		int val;
+		regGet(i+1, &val);
+		term_xy(start_x, y);
+
+		if(val == 1)
+		{
+			char flag[4];
+			sprintf(flag, "%c", flags[i]);
+			write(FD, flag, strlen(flag));
+		}
+		else
+			write(FD, " ", 1);
+		
+		start_x += 4;
+	}
+
+	fg_color(DEFAULT);
 }
 
 void transform_bchar(char *sym, int *big) //transform bigchar to int big[2]
