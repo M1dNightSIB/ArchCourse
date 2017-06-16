@@ -19,13 +19,13 @@ void init_ram_box() //window with cells of memory
 	write(FD, "MEMORY", strlen("MEMORY"));
 }
 
-void init_key_box() //window with manage keys
-{
+void init_big_char_box() //window with current cell of memory which 
+{						//is storage  in instruction counter
 	box(BC_X, BC_Y, BC_X + 51, BC_Y + 11);
 }
 
-void init_big_char_box() //window with current cell of memory which
-{						 //is storage  in instruction counter
+void init_key_box()  //window with manage keys
+{						 
 	box(KEY_X, KEY_Y, KEY_X + 32, KEY_Y + 11);
 	term_xy(KEY_X + 32 / 2 - 9, KEY_Y);
 	write(FD, "KEYS", strlen("KEYS"));

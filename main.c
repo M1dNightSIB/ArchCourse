@@ -16,6 +16,7 @@ int main()
 		print_acc();
 		print_inst_cnt();
 		print_operation();
+		print_cur_cell();
 		key_handler(key);
 	}
 
@@ -53,6 +54,7 @@ void cell_step(int sig)
 		print_ram(&cur_cell);
 		print_inst_cnt();
 		print_operation();
+		print_cur_cell();
 		inst_cnt++;
 		
 		if(inst_cnt > 0x63)
@@ -137,7 +139,20 @@ void key_handler(enum keys key)
 
 void print_cur_cell()
 {
+	int start_x = 45;
+	const int y = 16;
+	int big[2] = {0, 0};
+	int tmp = RAM[cur_cell];
 
+	for(int i = 0; i < 4; i++)
+	{
+		transform_bchar(ind[tmp % 10], big);
+		printchar(big, start_x, y, GREEN, DEFAULT);
+		start_x -= 9;
+		tmp /= 10;
+	}
+	transform_bchar(ind[16], big);
+	printchar(big, start_x, y, GREEN, DEFAULT);
 }
 
 void print_ram(int *cell)
@@ -188,4 +203,15 @@ void print_operation()
 	sprintf(buf, "+%02d : %02d", operation / 100, operation % 100);
 
 	write(FD, buf, strlen(buf));
+}
+
+void transform_bchar(char *sym, int *big) //transform bigchar to int big[2]
+{
+	int x, y;
+	for(int i = 0; i < 64; i++)
+	{
+		x = i % 8;
+		y = i / 8;
+		setcharpos(big, x, y, sym[i]);
+	}
 }
