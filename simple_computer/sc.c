@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include "sc.h"
 
-
 int	commands[38] = {0x10, 0x11, 0x20, 0x21, 0x30, 0x31, 0x32,
 					0x33, 0x40, 0x41, 0x42, 0x43, 0x51, 0x52,
 					0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59,
@@ -94,7 +93,7 @@ int memLoad(char *filename)
 
 int regInit()
 {
-	reg = 0x0;
+	registr_ = 0x0;
 	
 	return 0;
 }
@@ -104,9 +103,11 @@ int regSet(int reg, int value)
 	if((reg > 0) && (reg <= 5))
 	{
 		if(value == 1)
-			reg = reg | (1 << (reg - 1));
+		{
+			registr_ = registr_ | (1 << (reg - 1));
+		}
 		else if(value == 0)
-			reg = reg & (~(1 << (reg - 1)));
+			registr_ = registr_ & (~(1 << (reg - 1)));
 		else
 			return -1;
 	}
@@ -120,7 +121,7 @@ int regGet(int reg, int *value)
 {
 	if((reg > 0) && (reg <= 5))
 	{
-		*value = (reg >> (reg - 1)) & 0x1;
+		*value = (registr_ >> (reg - 1)) & 1;
 	}
 	else
 		return -1;

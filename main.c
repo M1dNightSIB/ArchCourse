@@ -7,8 +7,8 @@ int main()
 	init_frame();
 	memInit();
 	regInit();
+	init_sig_handlers();
 	set_non_canonical_regime(0x1, 0x0);
-	enum keys key = other_key;
 
 	while(hand_exit)
 	{
@@ -28,7 +28,36 @@ int main()
 
 void init_sig_handlers()
 {
+	signal(SIGALRM, cell_step);
+	signal(SIGUSR1, return_hand_manage);
 	
+	timer.it_value.tv_sec = 4;
+	timer.it_value.tv_usec = 0;
+	timer.it_interval.tv_sec = 1;
+	timer.it_interval.tv_usec = 500;
+	setitimer(ITIMER_REAL, &timer, NULL);
+}
+
+void return_hand_manage(int sig)
+{
+	regSet(FLAG_INTERRUPT, 1);
+}
+
+void cell_step(int sig)
+{
+	int val;
+	regGet(FLAG_INTERRUPT, &val);
+	if(val == 0)
+	{
+		cur_cell = inst_cnt;
+		print_ram(&cur_cell);
+		print_inst_cnt();
+		print_operation();
+		inst_cnt++;
+		
+		if(inst_cnt > 0x63)
+			inst_cnt = 0;
+	}
 }
 
 int set_non_canonical_regime(int vmin, int echo)
@@ -46,44 +75,51 @@ void key_handler(enum keys key)
 
 	switch(key)
 	{
-		case up_key:
+		case up_key:		//
 			cur_cell -= 0xA;
 			break;
-		
-		
-		case down_key:
+				
+		case down_key:		//
 			cur_cell += 0xA;
 			break;
-
 		
-		case left_key:
+		case left_key:		//
 			cur_cell -= 0x1;
 			break;
 
 		
-		case right_key:
+		case right_key:		//change cells
 			cur_cell += 0x1;
 			break;
 		
-		case q_key:
+		case q_key:			//exit
 			hand_exit = 0x0;
 			break;
 
-		case f5_key:
+		case f5_key:		//set accumulator
 			set_non_canonical_regime(0x4, 0x0);
 			read(FD, buf, sizeof(buf));
 			acc = atoi(buf);
 			set_non_canonical_regime(0x1, 0x0);
 			break;
 
-		case f6_key:
+		case f6_key:		//set instruction counter
 			inst_cnt = cur_cell;
 			break;
+
+		case t_key:
+			setitimer(ITIMER_REAL, &timer, NULL);
+			regSet(FLAG_INTERRUPT, 0);
+			break;	
 
 		case enter_key:
 			set_non_canonical_regime(0x4, 0x0);
 			read(FD, buf, sizeof(buf));
 			RAM[cur_cell] = atoi(buf);
+			break;
+
+		case i_key:
+			raise(SIGUSR1);
 			break;
 		
 		default: 

@@ -9,7 +9,7 @@
 #define FLAG_COMMAND 5
 
 int *RAM,
-	reg;
+	registr_;
 
 int memInit();
 int memSet(int address, int value);
