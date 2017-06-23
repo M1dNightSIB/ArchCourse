@@ -149,12 +149,12 @@ void print_cur_cell()
 	for(int i = 0; i < 4; i++)
 	{
 		transform_bchar(ind[tmp % 10], big);
-		printchar(big, start_x, y, GREEN, DEFAULT);
+		printchar(big, start_x, y, BLUE, DEFAULT);
 		start_x -= 9;
 		tmp /= 10;
 	}
-	transform_bchar(ind[16], big);
-	printchar(big, start_x, y, GREEN, DEFAULT);
+	transform_bchar(ind[16], big); //bigchar PLUS is 17 element in array
+	printchar(big, start_x, y, YELLOW, DEFAULT);
 }
 
 void print_ram(int *cell)
@@ -212,7 +212,7 @@ void print_flags()
 	int start_x = 64 + 1;
 	const int y = 11 + 1;
 
-	fg_color(RED);
+	fg_color(GREEN);
 
 	for(int i = 0; i < 5; i++)
 	{
