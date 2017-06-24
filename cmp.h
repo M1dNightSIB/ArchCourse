@@ -4,6 +4,7 @@
 #include "simple_computer/sc.h"
 #include "main_frame/mf.h"
 #include "read_keys/rk.h"
+#include "cpu/alu.h"
 #include <signal.h>
 #include <signal.h>
 #include <sys/time.h>

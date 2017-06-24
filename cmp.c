@@ -313,7 +313,8 @@ void key_handler(enum keys key)
 	if(cur_cell < 0x0)
 		cur_cell = 0x63;
 
-	operation = RAM[cur_cell];
+	memGet(cur_cell, &operation);
+	ADD(0x0);
 }
 
 void print_cur_cell()

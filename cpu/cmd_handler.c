@@ -93,7 +93,7 @@ int JZ(int operand)
 {
 	if(acc == 0x0)
 		inst_cnt = operand;
-
+	
 	return 0;
 }
 
