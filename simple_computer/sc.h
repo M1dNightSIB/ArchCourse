@@ -3,7 +3,7 @@
 
 #define memory_size 100
 #define FLAG_OVERFLOW 1
-#define FLAG_DIVISION 2
+#define FLAG_DIVIDE 2
 #define FLAG_OUTMEM 3
 #define FLAG_INTERRUPT 4
 #define FLAG_COMMAND 5
