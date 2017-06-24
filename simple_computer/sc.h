@@ -14,8 +14,8 @@ int *RAM,
 int memInit();
 int memSet(int address, int value);
 int memGet(int address, int *value);
-int memSave(char *filename);
-int memLoad(char *filename);
+int memSave(const char *filename);
+int memLoad(const char *filename);
 int regInit(void);
 int regSet(int reg, int value);
 int regGet(int reg, int *value);

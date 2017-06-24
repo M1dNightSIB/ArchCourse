@@ -76,60 +76,68 @@ void key_handler(enum keys key)
 {
 	char buf[4];
 	read_key(&key);
-
-	switch(key)
+	
+	int val;
+	regGet(FLAG_INTERRUPT, &val);
+	
+	if(key == i_key)
 	{
-		case up_key:		//
-			cur_cell -= 0xA;
-			break;
-				
-		case down_key:		//
-			cur_cell += 0xA;
-			break;
-		
-		case left_key:		//
-			cur_cell -= 0x1;
-			break;
-
-		
-		case right_key:		//change cells
-			cur_cell += 0x1;
-			break;
-		
-		case q_key:			//exit
-			hand_exit = 0x0;
-			break;
-
-		case f5_key:		//set accumulator
-			set_non_canonical_regime(0x4, 0x0);
-			read(FD, buf, sizeof(buf));
-			acc = atoi(buf);
-			set_non_canonical_regime(0x1, 0x0);
-			break;
-
-		case f6_key:		//set instruction counter
-			inst_cnt = cur_cell;
-			break;
-
-		case t_key:
-			setitimer(ITIMER_REAL, &timer, NULL);
-			regSet(FLAG_INTERRUPT, 0);
-			break;	
-
-		case enter_key:
-			set_non_canonical_regime(0x4, 0x0);
-			read(FD, buf, sizeof(buf));
-			RAM[cur_cell] = atoi(buf);
-			break;
-
-		case i_key:
-			raise(SIGUSR1);
-			break;
-		
-		default: 
-			key = other_key;
-			break;
+		raise(SIGUSR1);
 	}
+
+	if(val == 1)
+	{
+			switch(key)
+				{
+					case up_key:		//
+						cur_cell -= 0xA;
+						break;
+							
+					case down_key:		//
+						cur_cell += 0xA;
+						break;
+					
+					case left_key:		//
+						cur_cell -= 0x1;
+						break;
+		
+					
+					case right_key:		//change cells
+						cur_cell += 0x1;
+						break;
+					
+					case q_key:			//exit
+						hand_exit = 0x0;
+						break;
+		
+					case f5_key:		//set accumulator
+						set_non_canonical_regime(0x4, 0x0);
+						read(FD, buf, sizeof(buf));
+						acc = atoi(buf);
+						set_non_canonical_regime(0x1, 0x0);
+						break;
+		
+					case f6_key:		//set instruction counter
+						inst_cnt = cur_cell;
+						break;
+		
+					case t_key:
+						setitimer(ITIMER_REAL, &timer, NULL);
+						regSet(FLAG_INTERRUPT, 0);
+						break;	
+		
+					case enter_key:
+						set_non_canonical_regime(0x4, 0x0);
+						read(FD, buf, sizeof(buf));
+						RAM[cur_cell] = atoi(buf);
+						set_non_canonical_regime(0x1, 0x0);
+						break;
+
+					default: 
+						key = other_key;
+						break;
+				}
+			}
 
 	if(cur_cell > 0x63)// 0x63 = 99
 		cur_cell = 0x0;

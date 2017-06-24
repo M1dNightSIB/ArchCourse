@@ -18,24 +18,24 @@ int memInit()
 	if(RAM == NULL)
 		return -1;
 	for(int i = 0; i < memory_size; i++)
-		RAM[i] = 0;
+		RAM[i] = 0x0;
 	
 	return 0;
 }
 
 int memSet(int address, int value)
 {
-	if(address < memory_size && address >= 0)
+	if(address < memory_size && address >= 0x0)
 	{
 		RAM[address] = value;
 	}
 	else
 	{
-		regSet(FLAG_OUTMEM, 1);
+		regSet(FLAG_OUTMEM, 0x1);
 		
 		return -1;
 	}
-	return 0;
+	return 0x0;
 }
 
 int memGet(int address, int *value)
@@ -52,7 +52,7 @@ int memGet(int address, int *value)
 	}
 }
 
-int memSave(char *filename)
+int memSave(const char *filename)
 {
 	FILE *MEMORYDUMP;
 	
@@ -70,7 +70,7 @@ int memSave(char *filename)
 	return 0;
 }
 
-int memLoad(char *filename)
+int memLoad(const char *filename)
 {
 	FILE *MEMORYDUMP;
 	
