@@ -314,7 +314,6 @@ void key_handler(enum keys key)
 		cur_cell = 0x63;
 
 	memGet(cur_cell, &operation);
-	ADD(0x0);
 }
 
 void print_cur_cell()
